@@ -25,6 +25,7 @@ public class hello {
                 System.exit(0);
             }
 
+            //convert string array to integer array
             int iarrInput[] = new int[sarrInput.length];
 
             // find Max sum
@@ -43,11 +44,14 @@ public class hello {
                 }
 
             }
-
             // print Max
             System.out.println("#" + tc + " " + maxSum);
+
+            //reset
+            maxSum = -1001;
+            sum = 0;
         }
         scanner.close();
-
+        
     }
 }
