@@ -1,21 +1,29 @@
-import java.util.Scanner;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 
 public class sw_5607 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         int testCase = 0; // test case number
+        String input;
+        String[] arrInput;
         int input_N = 0; // input N
         BigInteger input_Nt; // temp of N
         int input_R = 0; // input R
         BigInteger input_Rt; // temp of R
         BigInteger result; // result
 
-        Scanner scanner = new Scanner(System.in);
-        testCase = scanner.nextInt(); // store test case
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        testCase = Integer.parseInt(br.readLine()); //store number of test case
 
         for (int tc = 1; tc <= testCase; tc++) {
-            input_N = scanner.nextInt(); // store N
-            input_R = scanner.nextInt(); // store R
+            //store input and split to N and R
+            input = br.readLine();
+            arrInput= input.split(" ");
+            input_N = Integer.parseInt(arrInput[0]);
+            input_R = Integer.parseInt(arrInput[1]);
 
             if (input_N - input_R < input_R) // for reduce computing of combination
             {
@@ -55,6 +63,6 @@ public class sw_5607 {
             input_R = 0;
         }
 
-        scanner.close();
+
     }
 }
