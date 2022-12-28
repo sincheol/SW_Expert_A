@@ -6,22 +6,21 @@ public class SwExpert2 {
 	private static final int D = 1234567891;
 	public static void main(String[] args) throws Exception 
 	{
-		System.out.print("Test case Number : ");
+		
 		Scanner sc = new Scanner(System.in);
 		int T;
 		T = sc.nextInt();
 		sc.nextLine();
-		System.out.print("Input Numbers : ");
-		String input = sc.nextLine();
-		String[] arr = input.split(" ");
-		int N;
-		N = Integer.parseInt(arr[0]);
-		int R;
-		R = Integer.parseInt(arr[1]);
-		int result = 0;
 		
 		for(int test_case = 1; test_case <= T; test_case++) 
-		{
+		{	
+			String input = sc.nextLine();
+			String[] arr = input.split(" ");
+			int N;
+			N = Integer.parseInt(arr[0]);
+			int R;
+			R = Integer.parseInt(arr[1]);
+			int result = 0;
 			result = (int) combination(N,R);
             System.out.println("#" + test_case + " " + result);
 			
