@@ -27,7 +27,7 @@ public class sw_5607 {
                 input_R = input_N - input_R;
             }
 
-            // we could divide nCr modular operation to n!%p && (r!(n-r)!^-1)%p
+            // we could divide nCr modulo operation to n!%p && (r!(n-r)!^-1)%p
             // calcalate n!%p
             nFactorial = new long[input_N + 1];
             nFactorial[0] = 1;
