@@ -2,67 +2,64 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 
 public class sw_5607 {
-    public static void main(String[] args) throws IOException {
-        int testCase = 0; // test case number
-        String input;
-        String[] arrInput;
-        int input_N = 0; // input N
-        BigInteger input_Nt; // temp of N
-        int input_R = 0; // input R
-        BigInteger input_Rt; // temp of R
-        BigInteger result; // result
+    private static final int primeN = 1234567891;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        testCase = Integer.parseInt(br.readLine()); //store number of test case
+    public static void main(String[] args) throws IOException {
+        int testCase = 0;
+        int input_N = 0;
+        int input_R = 0;
+        long nFactorial[];
+        long result = 0;
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // generate buffered reader
+        testCase = Integer.parseInt(br.readLine()); // read testCase & convert to int
 
         for (int tc = 1; tc <= testCase; tc++) {
-            //store input and split to N and R
-            input = br.readLine();
-            arrInput= input.split(" ");
-            input_N = Integer.parseInt(arrInput[0]);
-            input_R = Integer.parseInt(arrInput[1]);
+            String sInput = br.readLine(); // read N and R
+            String arrInput[] = sInput.split(" "); // split input string
+            input_N = Integer.parseInt(arrInput[0]); // store N
+            input_R = Integer.parseInt(arrInput[1]); // store R
 
-            if (input_N - input_R < input_R) // for reduce computing of combination
-            {
+            // using combination formula to reduce calc
+            if (input_N - input_R < input_R) {
                 input_R = input_N - input_R;
             }
 
-            if (input_R == 0) // we don't need computing
-            {
-                System.out.println("#" + tc + " " + input_N);
-                // reset
-                input_N = 0;
-                input_R = 0;
-                continue;
+            // we could divide nCr modular operation to n!%p && (r!(n-r)!^-1)%p
+            // calcalate n!%p
+            nFactorial = new long[input_N + 1];
+            nFactorial[0] = 1;
+            for (int i = 1; i <= input_N; i++) {
+                nFactorial[i] = (nFactorial[i - 1] * i) % primeN;
             }
 
-            // store input_N, R
-            input_Nt = new BigInteger(String.valueOf(input_N));
-            input_Rt = new BigInteger(String.valueOf(input_R));
+            // ((r!(n-r)!)^-1)%p is equal to ((r!(n-r!)^(1234567891-2))%p) using fermat's
+            // little theorem
+            long base = (nFactorial[input_R] * nFactorial[input_N - input_R]) % primeN;
+            long exp = primeN - 2;
 
-            // store input_N, R
-            BigInteger bigInput_N = input_Nt;
-            BigInteger bigInput_R = input_Rt;
+            result = (nFactorial[input_N] * calculate(base, exp))%primeN;
+            System.out.println("#" + tc + " " + result); // print result
+        }
+    }
 
-            // computing of combination
-            for (int i = 1; i < input_R; i++) {
-                bigInput_N = bigInput_N.multiply(input_Nt.subtract(new BigInteger(String.valueOf(i))));
-                bigInput_R = bigInput_R.multiply(input_Rt.subtract(new BigInteger(String.valueOf(i))));
-            }
-
-            BigInteger remain = new BigInteger("1234567891");
-            result = (bigInput_N.divide(bigInput_R)).remainder(remain);
-
-            System.out.println("#" + tc + " " + result);
-
-            // reset variables
-            input_N = 0;
-            input_R = 0;
+    // calculate exponents b = base, ex = exponent
+    private static long calculate(long b, long ex) {
+        if (ex == 0) {
+            return 1;
+        }
+        if (ex == 1) {
+            return b;
         }
 
+        long tmp = calculate(b, ex / 2);
+        long c = (tmp * tmp) % primeN;
 
+        if (ex % 2 == 0) {
+            return c;
+        } else
+            return (c * b) % primeN;
     }
 }
