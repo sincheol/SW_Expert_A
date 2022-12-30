@@ -8,9 +8,10 @@ public class sw_1206 {
         for (int testCase = 1; testCase <= 10; testCase++) {
 
             int buildings = 0; // number of buildings
-            int[] bHeight;
-            int[] view;
-            int result = 0;
+            int[] bHeight; //height of building
+            int[] view; //view of building
+            int result = 0; //result
+            int pass =0; //in searching view if there has view, we can jump to n+2 building
 
             buildings = Integer.parseInt(br.readLine()); // store number of buildings
             bHeight = new int[buildings];
@@ -24,10 +25,19 @@ public class sw_1206 {
             }
 
             for (int n = 2; n < buildings - 2; n++) {
+                if(pass!=0){
+                    pass--;
+                    continue;
+                }
+
                 int ltemp = smaller(bHeight[n] - bHeight[n - 1], bHeight[n] - bHeight[n - 2]);
                 int rtemp = smaller(bHeight[n] - bHeight[n + 1], bHeight[n] - bHeight[n + 2]);
                 view[n] = smaller(ltemp, rtemp);
                 result = result + view[n];
+
+                if(view[n]>0){
+                    pass = 2;
+                }
             }
 
             System.out.println("#" + testCase + " " + result);
