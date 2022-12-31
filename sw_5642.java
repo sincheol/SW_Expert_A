@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class hello {
+public class sw_5642 {
     public static void main(String[] args) {
         int testCase = 1; // Number of test case
         int inputNumber = 0; // Number of input
