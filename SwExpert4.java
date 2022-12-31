@@ -6,7 +6,7 @@ public class SwExpert4 {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		int T;
+		int T;						// variable for input
 		T = sc.nextInt();
 		
 		for(int Test_case = 1; Test_case <= T; Test_case++) {
