@@ -11,7 +11,7 @@ public class sw_1206 {
             int[] bHeight; //height of building
             int[] view; //view of building
             int result = 0; //result
-            int pass =0; //in searching view if there has view, we can jump to n+2 building
+            int pass =0; //for reduce time
 
             buildings = Integer.parseInt(br.readLine()); // store number of buildings
             bHeight = new int[buildings];
@@ -25,7 +25,7 @@ public class sw_1206 {
             }
 
             for (int n = 2; n < buildings - 2; n++) {
-                if(pass!=0){
+                if(pass!=0){ //pass
                     pass--;
                     continue;
                 }
@@ -35,7 +35,7 @@ public class sw_1206 {
                 view[n] = smaller(ltemp, rtemp);
                 result = result + view[n];
 
-                if(view[n]>0){
+                if(view[n]>0){ //if there has view, we can jump to n+2 building
                     pass = 2;
                 }
             }
