@@ -13,8 +13,8 @@ public class sw_1209 {
             max = 0;
             int tc = Integer.parseInt(br.readLine());
             int[][] arr = new int[100][100];
-            int rCross = 0;
-            int lCross = 0;
+            // int rCross = 0;
+            // int lCross = 0;
             int sum = 0;
 
             for (int row = 0; row < 100; row++) {
@@ -26,14 +26,14 @@ public class sw_1209 {
                     arr[row][col] = Integer.parseInt(sArr[col]);
                     sum = sum + arr[row][col]; // store rows sum
 
-                    if (row == col) { // store right cross
-                        rCross = rCross + arr[row][col];
-                        isMax(rCross);
-                    }
-                    if (row + col == 99) { // store left cross
-                        lCross = lCross + arr[row][col];
-                        isMax(lCross);
-                    }
+                    // if (row == col) { // store right cross
+                    //     rCross = rCross + arr[row][col];
+                    //     isMax(rCross);
+                    // }
+                    // if (row + col == 99) { // store left cross
+                    //     lCross = lCross + arr[row][col];
+                    //     isMax(lCross);
+                    // }
                 }
                 isMax(sum);
             }
