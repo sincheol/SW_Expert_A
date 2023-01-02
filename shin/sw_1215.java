@@ -1,3 +1,4 @@
+package shin;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -31,20 +32,20 @@ public class sw_1215 {
             c = 8 * 8;
         } else if (l % 2 == 0) { // sub string length is even
             for (int row = 0; row < 8; row++) {
-                for (int col = index - 1; col < 8 - index; col++) {
-                    int temp = 0;
-                    int tcol = col;
+                for (int col = index - 1; col < 8 - index; col++) { //find in columns
+                    int temp = 0; //compare with 2n+1
+                    int tcol = col; //palindrome first check
                     while (true) {
-                        if (tcol < 0 || tcol + 2 * temp + 1 > 7) {
+                        if (tcol < 0 || tcol + 2 * temp + 1 > 7) { //if out of range throw
                             break;
                         }
-                        if (arr[row][tcol].equals(arr[row][tcol + 2 * temp + 1])) {
+                        if (arr[row][tcol].equals(arr[row][tcol + 2 * temp + 1])) { //compare with String type must use equals
                             temp++;
                             tcol--;
-                        } else {
+                        } else { //not palindrome
                             break;
                         }
-                        if (temp == index) {
+                        if (temp == index) { //sentence is palindrome
                             c++;
                             break;
                         }
@@ -53,7 +54,7 @@ public class sw_1215 {
             }
 
             for (int col = 0; col < 8; col++) {
-                for (int row = index - 1; row < 8 - index; row++) {
+                for (int row = index - 1; row < 8 - index; row++) { //find in rows
                     int temp = 0;
                     int trow = row;
                     while (true) {
@@ -75,9 +76,9 @@ public class sw_1215 {
             }
         } else { // sub string length is odd
             for (int row = 0; row < 8; row++) {
-                for (int col = index; col < 8 - index; col++) {
-                    int temp = 1;
-                    int tcol = col - 1;
+                for (int col = index; col < 8 - index; col++) { //find in columns
+                    int temp = 1; //compare with 2n
+                    int tcol = col - 1; //we don't need middle / palindrome first check
                     while (true) {
                         if (tcol < 0 || tcol + 2 * temp > 7) {
                             break;
@@ -96,7 +97,7 @@ public class sw_1215 {
                 }
             }
             for (int col = 0; col < 8; col++) {
-                for (int row = index; row < 8 - index; row++) {
+                for (int row = index; row < 8 - index; row++) { //find in rows
                     int temp = 1;
                     int trow = row - 1;
                     while (true) {
