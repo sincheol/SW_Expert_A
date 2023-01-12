@@ -5,8 +5,6 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 
 public class sw_8888 {
-    private static int r;
-    private static int sum;
 
     public static void main(String[] args) throws IOException {
         int testCase = 0;
@@ -18,8 +16,8 @@ public class sw_8888 {
 
         for (int tc = 1; tc <= testCase; tc++) {
             int input[] = new int[3]; // 0 = n / 1 = t / 2 = p
-            r = 1;
-            sum = 0;
+            int r = 1;
+            int sum = 0;
 
             String sInput = br.readLine(); // first testcase
             String[] arrInput = sInput.split(" ");
@@ -34,50 +32,47 @@ public class sw_8888 {
                 String stmp = br.readLine(); // read participants score
                 String[] arrtmp = stmp.split(" ");
 
-                for (int i = 0; i < input[1]; i++) {
+                for (int i = 0; i < input[1]; i++) { // calculate problem
                     part[in][i] = Integer.parseInt(arrtmp[i]);
                     if (part[in][i] == 0) {
                         score[i]++;
                     }
                 }
-                part[in][input[1]] = s_cnt(part, in, input[1]);
+
+                for (int i = 0; i < input[1]; i++) {
+                    part[in][input[1]] = part[in][input[1]] + part[in][i];
+                }
+
             }
-            s_sum(part, score, input[0], input[1], input[2]);
+
+            for (int i = 0; i < input[1]; i++) {
+                sum = sum + score[i] * part[input[2]][i];
+            }
+
+            for (int i = 1; i <= input[0]; i++) {
+                int tmp = 0;
+                for (int j = 0; j < input[1]; j++) {
+                    tmp = tmp + part[i][j] * score[j];
+                }
+
+                if (tmp > sum) {
+                    r++;
+                } else if (tmp == sum) {
+                    if (part[input[2]][input[1]] < part[i][input[1]]) {
+                        r++;
+                    } else if (part[input[2]][input[1]] == part[i][input[1]]) {
+                        if (i < input[2])
+                            r++;
+                    }
+                }
+
+            }
+
             sb.append("#").append(tc).append(" ").append(sum).append(" ").append(r).append("\n");
         }
 
         System.out.println(sb);
         br.close();
-    }
-
-    private static int s_cnt(int[][] args, int num, int t) {
-        int s = 0;
-        for (int i = 0; i < t; i++) {
-            s = s + args[num][i];
-        }
-        return s;
-
-    }
-
-    private static void s_sum(int[][] arr, int[] sc, int n, int t, int p) {
-
-        for (int i = 0; i < t; i++) {
-            sum = sum + sc[i] * arr[p][i];
-        }
-
-        for (int i = 1; i <= n; i++) {
-            int tmp = 0;
-            for (int j = 0; j < t; j++) {
-                tmp = tmp + arr[i][j] * sc[j];
-            }
-            if (tmp > sum) {
-                r++;
-            } else if (tmp == sum && arr[p][t] < arr[i][t]) {
-                r++;
-            } else if (tmp == sum && arr[p][t] == arr[i][t] && i < p) {
-                r++;
-            }
-        }
     }
 
 }
