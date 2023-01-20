@@ -33,8 +33,7 @@ public class sw_12051 {
                 p = 0;
             } else if (p_d > 0 && p_g == 0) { // not possible
                 p = 0;
-            }
-            if (p == 1) {
+            } else {
                 p = 0; // reset
                 if (n >= 100) {
                     p = 1;
