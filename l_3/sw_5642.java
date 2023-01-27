@@ -1,4 +1,4 @@
-package shin;
+package l_3;
 import java.util.Scanner;
 
 public class sw_5642 {
