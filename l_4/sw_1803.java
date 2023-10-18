@@ -1,97 +1,120 @@
 package l_4;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.IOException;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class sw_1803 {
-    private static int dst;
-    private static int n;
+    public class distance {
+        protected int value; // this would be represent distance from init node...
+
+        public void setValue(int v) {
+            this.value = v;
+        }
+
+        public int getValue() {
+            return this.value;
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
         StringTokenizer st = null;
+        StringBuilder sb = new StringBuilder();
 
         int testCase = Integer.parseInt(br.readLine());
 
         for (int tc = 1; tc <= testCase; tc++) {
-            int m;
-            int init;
-
             st = new StringTokenizer(br.readLine(), " ");
 
-            // reset
-            n = Integer.parseInt(st.nextToken());
-            m = Integer.parseInt(st.nextToken());
-            init = Integer.parseInt(st.nextToken());
-            dst = Integer.parseInt(st.nextToken());
+            int n = Integer.parseInt(st.nextToken()); // nubmer of nodes
+            int m = Integer.parseInt(st.nextToken()); // number of edges
+            int init_n = Integer.parseInt(st.nextToken());
+            int dst_n = Integer.parseInt(st.nextToken());
 
-            // 1 X N dimension matrix
-
+            int max = 0;
             int[][] input = new int[m + 1][3];
-            Boolean[] set = new Boolean[n + 1]; // mst node set / default is null
-            int[] d = new int[n + 1]; // select node that has minimum weight..
+            int[] next = new int[n + 1];
+            boolean[] nSet = new boolean[n + 1];
+            int numSet = 0;
+            distance[] d = new distance[n + 1];
+            int[] list_d = new int[n + 1];
+            int list = 0;
+            int minidx = 0;
 
-            for (int i = 1; i <= n; i++) {
-                d[i] = Integer.MAX_VALUE;
-                set[i] = false;
+            // reset distance
+            for (int t = 1; t <= n; t++) {
+                d[t].setValue(Integer.MAX_VALUE);
+                nSet[t] = true;
             }
 
-            set[init] = true;
+            d[init_n].setValue(0);
+            list++;
 
-            if (n == 1 || init == dst) {
-                d[dst] = 0;
-            } else {
-                for (int i = 1; i <= m; i++) {
-                    st = new StringTokenizer(br.readLine(), " ");
-                    input[i][0] = Integer.parseInt(st.nextToken()); // n1
-                    input[i][1] = Integer.parseInt(st.nextToken()); // n2
-                    input[i][2] = Integer.parseInt(st.nextToken()); // weight of edge
+            for (int e = 1; e <= m; e++) {
+                st = new StringTokenizer(br.readLine(), " ");
+
+                input[e][0] = Integer.parseInt(st.nextToken()); // v1
+                input[e][1] = Integer.parseInt(st.nextToken()); // v2
+                input[e][2] = Integer.parseInt(st.nextToken()); // weight
+
+                next[input[e][0]]++;
+                next[input[e][1]]++;
+
+                if (max < next[input[e][0]]) {
+                    max = next[input[e][0]];
                 }
+                if (max < next[input[e][1]]) {
+                    max = next[input[e][1]];
+                }
+            }
 
-                set[init] = true;
-                d[init] = 0;
+            int[][] nextArr = new int[n + 1][max + 1]; // store input number
 
-                for (int i = 1; i <= n - 1; i++) {
-                    int min = Integer.MAX_VALUE;
-                    int midx = 1000001;
+            for (int e = 1; e <= m; e++) {
+                int t1 = input[e][0];
+                int t2 = input[e][1];
 
-                    for (int j = 1; j <= m; j++) {
-                        if (set[input[j][0]]) {
-                            if (d[input[j][1]] > d[input[j][0]] + input[j][2]) {
-                                d[input[j][1]] = d[input[j][0]] + input[j][2];
-                                if (d[input[j][1]] < min) {
-                                    min = d[input[j][1]];
-                                    midx = input[j][1];
-                                }
+                nextArr[t1][next[t1--]] = e;
+                nextArr[t2][next[t2--]] = e;
+            }
+
+            while (numSet <= n) {
+                minidx = function에서부터 
+                nSet[minidx] = false; // push node to set which has min distance
+                int minIdx = d[0].idx;
+
+                for (int t = 1; t <= max; t++) { // update distance of neighbors..
+                    int t1 = nextArr[minIdx][t]; // t1 is edge number
+
+                    if (t1 != 0) {
+                        int t2 = input[t1][0];
+                        int t3 = input[t1][1];
+                        int weight = input[t1][2];
+
+                        if (t2 == minIdx) { // t2 is min index
+                            if (d[t3] > d[t2] + weight) {
+                                d[t3] = d[t2] + weight;
                             }
-                        } else if (set[input[j][1]]) {
-                            if (d[input[j][0]] > d[input[j][1]] + input[j][2]) {
-                                d[input[j][0]] = d[input[j][1]] + input[j][2];
-                                if (d[input[j][0]] < min) {
-                                    min = d[input[j][0]];
-                                    midx = input[j][0];
-                                }
+                        } else {
+                            if (d[t2] > d[t3] + weight) {
+                                d[t2] = d[t3] + weight;
                             }
                         }
-                    }
-                    if (midx != 1000001) {
-                        set[midx] = true;
+                    } else {
+                        break;
                     }
                 }
-            }
 
-            sb.append("#").append(tc).append(" ").append(d[dst]).append("\n");
+                if (minIdx == dst_n) {
+                    break;
+                }
+
+            }
         }
 
-        bw.write(sb.toString());
+        br.close();
         bw.flush();
         bw.close();
-        br.close();
     }
 }
