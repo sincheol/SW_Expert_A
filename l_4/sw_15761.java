@@ -1,4 +1,4 @@
-package shin;
+package l_4;
 
 import java.io.*;
 import java.util.StringTokenizer;
@@ -24,7 +24,7 @@ public class sw_15761 {
 
             if (a >= 4) {
                 res = a;
-                if (b > a) {
+                if (b >= a) {
                     res += a;
                 } else if (b == 1 || b == a - 1) {
                     res += 1;
