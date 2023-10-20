@@ -1,19 +1,21 @@
 package capstone;
 
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Random;
 import java.lang.Math;
 
-class Node implements Comparable<Node> {
+final class Node implements Comparable<Node> {
     long[] axes;
     Node left, right; // left, right, parent
-    long d;
+    long uId, d;
     int idx, state; // root-axes distance , 방문한 분기점 idx 0 = left, 1 = right, 2 = leaf 노드
+    ArrayList<Node> group = new ArrayList<Node>();
 
     public Node(long[] arr) {
         this.axes = arr;
         this.left = this.right = null;
-        this.d = 999999999;
+        this.d = 999999999999l;
         this.state = 0; // 2-> match / others wait
     }
 
@@ -32,8 +34,8 @@ class Node implements Comparable<Node> {
     }
 }
 
-public class kd_tree {
-    int k = 2; // 2 dimensional
+public final class kd_tree {
+    static final int k = 2; // 2 dimensional
     // depth = 0
 
     public Node newNode(long[] arr) {
@@ -107,9 +109,9 @@ public class kd_tree {
         return min;
     }
 
-    public void copyNode(long[] n1, long[] n2) {
+    public void copyNode(Node n1, Node n2) {
         for (int i = 0; i <= k; i++) {
-            n1[i] = n2[i];
+            n1 = n2;
         }
     }
 
@@ -127,11 +129,11 @@ public class kd_tree {
         if (areaxesSame(root.axes, axes)) {
             if (root.right != null) { // find min in right sub tree
                 Node min = findMin(root.right, cd);
-                copyNode(root.axes, min.axes);
+                copyNode(root, min);
                 root.right = deleteNodeRec(root.right, min.axes, depth + 1);
             } else if (root.left != null) { // find min in left sub tree
                 Node min = findMin(root.left, cd);
-                copyNode(root.axes, min.axes);
+                copyNode(root, min);
                 root.right = deleteNodeRec(root.left, min.axes, depth + 1);
             } else { // just delete it
                 root = null;
@@ -224,15 +226,21 @@ public class kd_tree {
         return best;
     }
 
-    public boolean p(Node root, Node best) {
-        if (best != null) {
+    public ArrayList<Node> findGroup(Node root, Node best, Node s) {
+        if ((best != null) && (best.state <= 2)) {
             best.state++;
-            if (best.state == 2) {
+            best.group.add(s);
+            if (best.state == 1) {
                 deleteNode(root, best.axes);
-                return true;
+                return best.group;
             }
+
         }
-        return false;
+        return null;
+    }
+
+    public void rst(Node node) {
+        node.group = null;
     }
 
     public static void main(String[] args) {
@@ -253,11 +261,12 @@ public class kd_tree {
         }
 
         long[] axes1 = { 1200, 1500 };
-        long beforeTime = System.currentTimeMillis();
-        Node test = kdTree.nearest(root, axes1);
-        long afterTime = System.currentTimeMillis();
-        long secDiffTime = (afterTime - beforeTime);
-        System.out.println("nearest node : (" + test.axes[0] + "," + test.axes[1] + ")" + test.d + "state = " + test.state);
-        System.out.println("time : " + secDiffTime);
+        Node test = new Node(axes1);
+        Node best = kdTree.nearest(root, test.axes);
+
+        ArrayList<Node> result = kdTree.findGroup(root, best, test);
+        System.out.println(
+                "nearest node : (" + best.axes[0] + "," + best.axes[1] + ")" + best.d + "state = " + best.state);
+        System.out.println(result.get(0).axes[1]);
     }
 }
