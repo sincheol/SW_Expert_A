@@ -7,25 +7,21 @@ import java.util.Random;
 import java.util.Set;
 
 public class test {
+
+    public void test1(int b) {
+        int a = 4;
+        test2(a);
+        System.out.println(a);
+    }
+
+    public void test2(int a) {
+        a = 5;
+    }
+
     public static void main(String[] args) {
-        int numCoordinates = 600000; // 원하는 좌표 개수
-        Set<String> coordinatesSet = new HashSet<>();
-        Random random = new Random();
-
-        while (coordinatesSet.size() < numCoordinates) {
-            int x = random.nextInt(100000) + 1; // 1부터 100000까지의 랜덤 x 좌표
-            int y = random.nextInt(100000) + 1; // 1부터 100000까지의 랜덤 y 좌표
-            coordinatesSet.add(x + "," + y);
-        }
-
-        try {
-            FileWriter writer = new FileWriter("random.txt");
-            for (String coordinates : coordinatesSet) {
-                writer.write(coordinates + "\n");
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        test t = new test();
+        int b = 2;
+        t.test1(b);
+        System.out.println(b);
     }
 }
