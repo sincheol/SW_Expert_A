@@ -2,24 +2,23 @@ package capstone;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
-import java.util.Random;
 import java.lang.Math;
 
 class Node implements Comparable<Node> {
-    long[] axes;
+    Long[] axes;
     Node left, right; // left, right, parent
-    long uId, d;
+    Long uId, d;
     int idx, state; // root-axes distance , 방문한 분기점 idx 0 = left, 1 = right, 2 = leaf 노드
-    ArrayList<Node> group = new ArrayList<Node>();
+    ArrayList<uNode> group = new ArrayList<uNode>();
 
-    protected Node(long[] arr) {
+    protected Node(Long[] arr) {
         this.axes = arr;
         this.left = this.right = null;
         this.d = 999999999999l;
         this.state = 0; // 2-> match / others wait
     }
 
-    public long getDistance() {
+    public Long getDistance() {
         return this.d;
     }
 
@@ -34,19 +33,29 @@ class Node implements Comparable<Node> {
     }
 }
 
+class uNode {
+    Long[] axes;
+    Long uId;
+
+    protected uNode(Long uId, Long[] arr) {
+        this.uId = uId;
+        this.axes = arr;
+    }
+}
+
 public final class kd_tree {
     static final int k = 2; // 2 dimensional
     // depth = 0
 
-    private Node newNode(long[] arr) {
+    private Node newNode(Long[] arr) {
         return new Node(arr);
     }
 
-    private Node insert(Node root, long[] axes) {
+    private Node insert(Node root, Long[] axes) {
         return insertTr(root, axes, 0);
     }
 
-    private Node insertTr(Node root, long[] axes, int depth) {
+    private Node insertTr(Node root, Long[] axes, int depth) {
         if (root == null) { // if tree is empty
             return newNode(axes);
         } else {
@@ -62,7 +71,7 @@ public final class kd_tree {
         }
     }
 
-    private boolean areaxesSame(long[] axes1, long[] axes2) {
+    private boolean areaxesSame(Long[] axes1, Long[] axes2) {
 
         for (int i = 0; i < k; i++) {
             if (axes1[i] != axes2[i]) {
@@ -109,12 +118,11 @@ public final class kd_tree {
         return min;
     }
 
-
-    private Node deleteNode(Node root, long[] axes) {
+    private Node deleteNode(Node root, Long[] axes) {
         return deleteNodeRec(root, axes, 0);
     }
 
-    private Node deleteNodeRec(Node root, long[] axes, int depth) {
+    private Node deleteNodeRec(Node root, Long[] axes, int depth) {
         if (root == null) {
             return null;
         }
@@ -146,7 +154,7 @@ public final class kd_tree {
 
     }
 
-    private Node searchNode(Node root, Node best, long[] axes, int depth, PriorityQueue<Node> q) {
+    private Node searchNode(Node root, Node best, Long[] axes, int depth, PriorityQueue<Node> q) {
         root.idx = 2; // it means leaf
         root.d = (long) Math.pow((double) root.axes[0] - (double) axes[0], 2)
                 + (long) Math.pow((double) root.axes[1] - (double) axes[1], 2);
@@ -182,15 +190,15 @@ public final class kd_tree {
 
     }
 
-    private Node nearest(Node root, long[] axes) {
-        Node best = newNode(new long[] { 0, 0 });
+    private Node nearest(Node root, Long[] axes) {
+        Node best = newNode(new Long[] { 0l, 0l });
         PriorityQueue<Node> q = new PriorityQueue<>();
 
         // reset
         return nearestNeighbor(root, best, axes, 0, q);
     }
 
-    private Node nearestNeighbor(Node root, Node best, long[] axes, int depth, PriorityQueue<Node> q) {
+    private Node nearestNeighbor(Node root, Node best, Long[] axes, int depth, PriorityQueue<Node> q) {
         int cd = depth % k;
 
         best = searchNode(root, best, axes, depth, q); // search로 들어가면서 axes와의 distance를 계산해 저장해 그것을 기반으로 queue에 저장
@@ -223,11 +231,11 @@ public final class kd_tree {
         return best;
     }
 
-    private ArrayList<Node> findGroup(Node root, Node best, Node s) {
+    private ArrayList<uNode> findGroup(Node root, Node best, uNode s) {
         if ((best != null) && (best.state <= 2)) {
             best.state++;
             best.group.add(s);
-            if (best.state == 1) {
+            if (best.state == 2) {
                 deleteNode(root, best.axes);
                 return best.group;
             }
@@ -240,8 +248,8 @@ public final class kd_tree {
         kd_tree kdTree = new kd_tree();
 
         Node root = null;
-        long[][] axes = { { 3, 6 }, { 17, 15 }, { 13, 15 }, { 6, 12 },
-                { 9, 1 }, { 2, 7 }, { 10, 19 } };
+        Long[][] axes = { { 3l, 6l }, { 17l, 15l }, { 13l, 15l }, { 6l, 12l },
+                { 9l, 1l }, { 2l, 7l }, { 10l, 19l } };
 
         int n = axes.length;
 
@@ -249,15 +257,26 @@ public final class kd_tree {
             root = kdTree.insert(root, axes[i]);
         }
 
-        long[] axes1 = { 12, 15 };
-        Node test = new Node(axes1);
+        Long a = 13l;
+        Long[] axes1 = { 12l, 15l };
+        Long b = 2l;
+        Long[] axes2 = { 11l, 15l };
+        uNode test = new uNode(a, axes1);
+        uNode test1 = new uNode(b, axes2);
+
         Node best = kdTree.nearest(root, test.axes);
+        Node best1 = kdTree.nearest(root, test1.axes);
 
-        ArrayList<Node> result = kdTree.findGroup(root, best, test);
-
+        ArrayList<uNode> result = kdTree.findGroup(root, best, test);
         System.out.println(
                 "nearest node : (" + best.axes[0] + "," + best.axes[1] + ")" + best.d + "state = " + best.state);
-        System.out.println(result.get(0).axes[1]);
+
+        ArrayList<uNode> result1 = kdTree.findGroup(root, best1, test1);
+        System.out.println(
+                "nearest node : (" + best1.axes[0] + "," + best1.axes[1] + ")" + best1.d + "state = " + best1.state);
+
+        System.out.println(result1.get(0).axes[0]);
+        System.out.println(result1.get(1).uId);
 
         kdTree.nearest(root, test.axes);
     }
